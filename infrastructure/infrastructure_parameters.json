@@ -1,0 +1,10 @@
+[
+    {
+        "ParameterKey": "DockerUsername",
+        "ParameterValue": "username"
+    },
+    {
+        "ParameterKey": "DockerPassword",
+        "ParameterValue": "password"
+    }
+]

@@ -1,4 +1,11 @@
 Description: Creating an EC2 instance.
+Parameters:
+  DockerUsername:
+    Description: The Docker Hub username.
+    Type: String
+  DockerPassword:
+    Description: The Docker Hub password.
+    Type: String
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -35,3 +42,16 @@ Resources:
       SecurityGroupIds: 
         - !GetAtt "MainSecurityGroup.GroupId"
       SubnetId: !Ref Subnet
+      UserData:
+        Fn::Base64:
+            !Sub 
+              - |
+                  #!/bin/bash
+                  set -o xtrace
+                  apt update
+                  apt install docker.io
+                  docker login -username ${DockerUsername} -password ${!DockerPassword}
+                  docker pull docker.io/mirch/dotnet-api
+                  docker run -d -p 80:80 mirch/dotnet-api
+
+
