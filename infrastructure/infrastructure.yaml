@@ -34,4 +34,4 @@ Resources:
       InstanceType: t2.micro
       SecurityGroupIds: 
         - !GetAtt "MainSecurityGroup.GroupId"
-      SubnetId: !Subnet
+      SubnetId: !Ref Subnet
