@@ -72,7 +72,7 @@ Resources:
             !Sub |
                   #!/bin/bash
                   apt update
-                  apt install docker.io
+                  apt-get install docker.io
                   docker login -username ${DockerUsername} -password ${!DockerPassword}
                   docker pull docker.io/mirch/dotnet-api
                   docker run -d -p 80:80 mirch/dotnet-api
