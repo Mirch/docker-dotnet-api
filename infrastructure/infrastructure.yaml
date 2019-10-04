@@ -1,9 +1,16 @@
 Description: Creating an EC2 instance.
 Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 192.168.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
   MainSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security group for the API instances.
+      VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
