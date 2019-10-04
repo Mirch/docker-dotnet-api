@@ -40,6 +40,7 @@ Resources:
     Properties:
       ImageId: ami-0ac05733838eabc06
       InstanceType: t2.micro
+      KeyName: dotnet-docker-keypair
       SecurityGroupIds: 
         - !GetAtt "MainSecurityGroup.GroupId"
       SubnetId: !Ref Subnet
