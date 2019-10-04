@@ -71,7 +71,6 @@ Resources:
         Fn::Base64:
             !Sub |
                   #!/bin/bash
-                  set -o xtrace
                   apt update
                   apt install docker.io
                   docker login -username ${DockerUsername} -password ${!DockerPassword}
