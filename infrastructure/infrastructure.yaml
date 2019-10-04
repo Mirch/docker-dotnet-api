@@ -6,6 +6,12 @@ Resources:
       CidrBlock: 192.168.0.0/16
       EnableDnsSupport: true
       EnableDnsHostnames: true
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: 192.168.0.0/16
   MainSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -27,3 +33,4 @@ Resources:
       ImageId: ami-0ac05733838eabc06
       InstanceType: t2.micro
       SecurityGroupIds: [!Ref MainSecurityGroup]
+      SubnetId: !Subnet
