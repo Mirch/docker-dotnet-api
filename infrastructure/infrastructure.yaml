@@ -26,3 +26,4 @@ Resources:
     Properties:
       ImageId: ami-0ac05733838eabc06
       InstanceType: t2.micro
+      SecurityGroupIds: [!Ref MainSecurityGroup]
