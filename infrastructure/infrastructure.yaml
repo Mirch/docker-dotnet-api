@@ -19,6 +19,7 @@ Resources:
       VpcId: !Ref VPC
       AvailabilityZone: !Select [ 0, !GetAZs '' ]
       CidrBlock: 192.168.0.0/16
+      MapPublicIpOnLaunch: true
   MainSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
