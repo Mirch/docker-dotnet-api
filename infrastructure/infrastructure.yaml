@@ -60,6 +60,11 @@ Resources:
           CidrIp: 0.0.0.0/0
   MainInstance:
     Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            docker: []
     Properties:
       ImageId: ami-0ac05733838eabc06
       InstanceType: t2.micro
@@ -71,8 +76,6 @@ Resources:
         Fn::Base64:
             !Sub |
                   #!/bin/bash
-                  apt update
-                  apt-get install docker.io
                   docker login -username ${DockerUsername} -password ${!DockerPassword}
                   docker pull docker.io/mirch/dotnet-api
                   docker run -d -p 80:80 mirch/dotnet-api
