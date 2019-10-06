@@ -100,8 +100,8 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Subnets:
-      - Fn::ImportValue: !Ref Subnet1
-      - Fn::ImportValue: !Ref Subnet2
+      - !Ref Subnet1
+      - !Ref Subnet2
       SecurityGroups:
       - Ref: MainSecurityGroup
   Listener:
