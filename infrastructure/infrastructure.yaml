@@ -63,7 +63,6 @@ Resources:
     Properties:
       ImageId: ami-0ac05733838eabc06
       InstanceType: t2.micro
-      KeyName: dotnet-docker-keypair
       SecurityGroupIds: 
         - !GetAtt "MainSecurityGroup.GroupId"
       SubnetId: !Ref Subnet
@@ -73,9 +72,8 @@ Resources:
                   #!/bin/bash
                   apt-get update -y
                   apt-get install docker.io -y
-                  wait
-                  docker login -username ${DockerUsername} -password ${!DockerPassword}
-                  docker pull docker.io/mirch/dotnet-api
-                  docker run -d -p 80:80 mirch/dotnet-api
+                  docker login -username ${DockerUsername} -password ${DockerPassword}
+                  docker pull docker.io/{DockerUsername}/dotnet-api
+                  docker run -d -p 80:80 {DockerUsername}/dotnet-api
 
 
