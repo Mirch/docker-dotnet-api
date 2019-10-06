@@ -85,7 +85,7 @@ Resources:
       SecurityGroups:
       - Ref: MainSecurityGroup
       InstanceType: t2.micro
- AutoScalingGroup:
+  AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier: !Join [",", [!Ref Subnet1, !Ref Subnet2]]
