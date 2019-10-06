@@ -82,6 +82,12 @@ Resources:
           docker pull docker.io/{DockerUsername}/dotnet-api
           docker run -d -p 80:80 {DockerUsername}/dotnet-api
       ImageId: ami-0ac05733838eabc06
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp2
+            DeleteOnTermination: true
       SecurityGroups:
       - Ref: MainSecurityGroup
       InstanceType: t2.micro
