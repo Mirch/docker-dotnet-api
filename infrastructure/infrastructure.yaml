@@ -1,4 +1,4 @@
-Description: Creating an EC2 instance.
+Description: Creating multiple instances behind a load balancer.
 Parameters:
   DockerUsername:
     Description: The Docker Hub username.
