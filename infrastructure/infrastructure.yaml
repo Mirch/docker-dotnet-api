@@ -152,8 +152,8 @@ Resources:
       Version: '1.16'
       RoleArn: arn:aws:iam::358599436160:role/eks-console-access
       ResourcesVpcConfig:
-        SecurityGroups:
+        SecurityGroupIds:
           - !Ref MainSecurityGroup
-        Subnets:
+        SubnetIds:
           - !Ref Subnet1
           - !Ref Subnet2
