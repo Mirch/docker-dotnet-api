@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dotnet-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    spec:
+      containers:
+      - image: mirch/dotnet-api
+        imagePullPolicy: Always
+        name: dotnet-api
+        ports:
+        - containerPort: 3000
+          protocol: TCP
