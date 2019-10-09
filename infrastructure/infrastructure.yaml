@@ -81,6 +81,7 @@ Resources:
                 set -o xtrace
                 /etc/eks/bootstrap.sh ${EksId}
             - EksId: !Ref EKS
+      ImageId: ami-0ac05733838eabc06
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
