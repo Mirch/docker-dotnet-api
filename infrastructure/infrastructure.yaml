@@ -74,14 +74,13 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash
-          apt-get update -y
-          apt-get install docker.io -y
-          docker login -u ${DockerUsername} -p ${DockerPassword}
-          docker pull docker.io/${DockerUsername}/dotnet-api
-          docker run -d -p 80:80 ${DockerUsername}/dotnet-api
-      ImageId: ami-0ac05733838eabc06
+        Fn::Base64: 
+          !Sub 
+            - |
+                #!/bin/bash
+                set -o xtrace
+                /etc/eks/bootstrap.sh ${EksId}
+            - EksId: !Ref EKS
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
