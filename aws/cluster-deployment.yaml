@@ -1,5 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
+metadata:
+  name: dotnet-api
+  labels:
+    app: dotnet-api
+  namespace: default
 spec:
   replicas: 3
   selector:
@@ -11,11 +16,14 @@ spec:
       maxUnavailable: 25%
     type: RollingUpdate
   template:
+    metadata:
+      labels:
+        app: dotnet-api
     spec:
       containers:
       - image: mirch/dotnet-api
         imagePullPolicy: Always
         name: dotnet-api
         ports:
-        - containerPort: 3000
+        - containerPort: 80
           protocol: TCP
