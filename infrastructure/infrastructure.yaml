@@ -149,7 +149,7 @@ Resources:
   EKS:
     Type: AWS::EKS::Cluster
     Properties:
-      Version: '1.16'
+      Version: '1.14'
       RoleArn: arn:aws:iam::358599436160:role/eks-console-access
       ResourcesVpcConfig:
         SecurityGroupIds:
