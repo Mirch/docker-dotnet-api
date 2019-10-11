@@ -70,9 +70,15 @@ Resources:
           FromPort: 0
           ToPort: 65535
           CidrIp: 0.0.0.0/0
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles: arn:aws:iam::358599436160:role/eks-console-access
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
+      IamInstanceProfile: 
       UserData:
         Fn::Base64: 
           !Sub 
@@ -80,8 +86,12 @@ Resources:
                 #!/bin/bash
                 set -o xtrace
                 /etc/eks/bootstrap.sh ${EksId}
+                /opt/aws/bin/cfn-signal --exit-code $? \
+                        --stack  ${AWS::StackName} \
+                        --resource NodesAutoScalingGroup  \
+                        --region ${AWS::Region}
             - EksId: !Ref EKS
-      ImageId: ami-0ac05733838eabc06
+      ImageId: ami-0e21bc066a9dbabfa
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
