@@ -92,7 +92,7 @@ Resources:
     Properties:
       Path: "/"
       Roles:
-        - !InstanceRole
+        - !Ref InstanceRole
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
