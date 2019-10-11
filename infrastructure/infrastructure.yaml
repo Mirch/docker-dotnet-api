@@ -78,7 +78,7 @@ Resources:
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      IamInstanceProfile: 
+      IamInstanceProfile: !Ref InstanceProfile
       UserData:
         Fn::Base64: 
           !Sub 
