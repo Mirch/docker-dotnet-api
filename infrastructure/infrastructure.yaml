@@ -74,7 +74,8 @@ Resources:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: "/"
-      Roles: arn:aws:iam::358599436160:role/eks-console-access
+      Roles:
+        - arn:aws:iam::358599436160:role/eks-console-access
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
