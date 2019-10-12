@@ -148,7 +148,7 @@ Resources:
                 /etc/eks/bootstrap.sh ${EksId}
                 /opt/aws/bin/cfn-signal --exit-code $? \
                         --stack  ${AWS::StackName} \
-                        --resource NodesAutoScalingGroup  \
+                        --resource AutoScalingGroup  \
                         --region ${AWS::Region}
             - EksId: !Ref EKS
       ImageId: ami-0c5d8b180f6256839
