@@ -92,6 +92,25 @@ Resources:
                   - "kubernetes.io/cluster/${EksId}"
                   - EksId: !Ref EKS
           Value: 'owned'  
+  EksSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Default security group for EKS.
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 1025
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1025
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
   InstanceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -218,7 +237,7 @@ Resources:
       RoleArn: arn:aws:iam::358599436160:role/eks-console-access
       ResourcesVpcConfig:
         SecurityGroupIds:
-          - !Ref MainSecurityGroup
+          - !Ref EksSecurityGroup
         SubnetIds:
           - !Ref Subnet1
           - !Ref Subnet2
