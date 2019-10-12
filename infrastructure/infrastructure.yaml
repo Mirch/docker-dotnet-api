@@ -86,6 +86,12 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
+    Tags:
+      - Key: 
+            !Sub 
+                - "kubernetes.io/cluster/${EksId}"
+                - EksId: !Ref EKS
+        Value: 'owned'  
   InstanceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -126,7 +132,7 @@ Resources:
                         --resource NodesAutoScalingGroup  \
                         --region ${AWS::Region}
             - EksId: !Ref EKS
-      ImageId: ami-0e21bc066a9dbabfa
+      ImageId: ami-0c5d8b180f6256839
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
@@ -137,6 +143,7 @@ Resources:
       - Ref: MainSecurityGroup
       InstanceType: t2.micro
   AutoScalingGroup:
+    DependsOn: EKS
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier:
@@ -149,6 +156,19 @@ Resources:
       MaxSize: 4
       TargetGroupARNs:
       - Ref: TargetGroup
+    Tags:
+      - Key: Name
+        Value: 
+            !Sub 
+                - "${EksId}-CapstoneNodesGroup-Node"
+                - EksId: !Ref EKS
+        PropagateAtLaunch: 'true'
+      - Key: 
+            !Sub 
+                - "kubernetes.io/cluster/${EksId}"
+                - EksId: !Ref EKS
+        Value: 'owned'
+        PropagateAtLaunch: 'true'
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -194,7 +214,7 @@ Resources:
   EKS:
     Type: AWS::EKS::Cluster
     Properties:
-      Version: '1.14'
+      Version: '1.13'
       RoleArn: arn:aws:iam::358599436160:role/eks-console-access
       ResourcesVpcConfig:
         SecurityGroupIds:
