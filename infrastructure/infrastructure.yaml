@@ -86,12 +86,12 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
-    Tags:
-      - Key: 
-            !Sub 
-                - "kubernetes.io/cluster/${EksId}"
-                - EksId: !Ref EKS
-        Value: 'owned'  
+      Tags:
+        - Key: 
+              !Sub 
+                  - "kubernetes.io/cluster/${EksId}"
+                  - EksId: !Ref EKS
+          Value: 'owned'  
   InstanceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -156,19 +156,19 @@ Resources:
       MaxSize: 4
       TargetGroupARNs:
       - Ref: TargetGroup
-    Tags:
-      - Key: Name
-        Value: 
-            !Sub 
-                - "${EksId}-CapstoneNodesGroup-Node"
-                - EksId: !Ref EKS
-        PropagateAtLaunch: 'true'
-      - Key: 
-            !Sub 
-                - "kubernetes.io/cluster/${EksId}"
-                - EksId: !Ref EKS
-        Value: 'owned'
-        PropagateAtLaunch: 'true'
+      Tags:
+        - Key: Name
+          Value: 
+              !Sub 
+                  - "${EksId}-CapstoneNodesGroup-Node"
+                  - EksId: !Ref EKS
+          PropagateAtLaunch: 'true'
+        - Key: 
+              !Sub 
+                  - "kubernetes.io/cluster/${EksId}"
+                  - EksId: !Ref EKS
+          Value: 'owned'
+          PropagateAtLaunch: 'true'
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
