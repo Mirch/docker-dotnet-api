@@ -1,4 +1,4 @@
-Description: Creating multiple instances behind a load balancer.
+Description: Creating an EKS cluster with multiple EC2 instances.
 Parameters:
   DockerUsername:
     Description: The Docker Hub username.
