@@ -65,26 +65,10 @@ Resources:
           FromPort: 0
           ToPort: 65535
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 1025
-          ToPort: 65535
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: "-1"
           FromPort: 0
           ToPort: 65535
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 1025
-          ToPort: 65535
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: 
@@ -173,63 +157,13 @@ Resources:
       DesiredCapacity: 3
       MinSize: 2
       MaxSize: 4
-      TargetGroupARNs:
-      - Ref: TargetGroup
       Tags:
-        - Key: Name
-          Value: 
-              !Sub 
-                  - "${EksId}-CapstoneNodesGroup-Node"
-                  - EksId: !Ref EKS
-          PropagateAtLaunch: 'true'
         - Key: 
               !Sub 
                   - "kubernetes.io/cluster/${EksId}"
                   - EksId: !Ref EKS
           Value: 'owned'
           PropagateAtLaunch: 'true'
-  LoadBalancer:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Subnets:
-      - !Ref Subnet1
-      - !Ref Subnet2
-      SecurityGroups:
-      - Ref: MainSecurityGroup
-  Listener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-      - Type: forward
-        TargetGroupArn:
-          Ref: TargetGroup
-      LoadBalancerArn:
-        Ref: LoadBalancer
-      Port: '80'
-      Protocol: HTTP
-  ListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-      - Type: forward
-        TargetGroupArn: !Ref TargetGroup
-      Conditions:
-      - Field: path-pattern
-        Values: [/]
-      ListenerArn: !Ref Listener
-      Priority: 1
-  TargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      HealthCheckIntervalSeconds: 10
-      HealthCheckPath: /
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 8
-      HealthyThresholdCount: 2
-      Port: 80
-      Protocol: HTTP
-      UnhealthyThresholdCount: 5
-      VpcId: !Ref VPC
   EKS:
     Type: AWS::EKS::Cluster
     Properties:
