@@ -1,4 +1,4 @@
-Description: Creating an EC2 instance.
+Description: Creating an EKS cluster with multiple EC2 instances.
 Parameters:
   DockerUsername:
     Description: The Docker Hub username.
@@ -31,17 +31,29 @@ Resources:
       RouteTableId: !Ref RouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
-  Subnet:
+  Subnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       AvailabilityZone: !Select [ 0, !GetAZs '' ]
-      CidrBlock: 192.168.0.0/16
+      CidrBlock: 192.168.64.0/18
       MapPublicIpOnLaunch: true
-  SubnetRouteTableAssociation:
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock: 192.168.128.0/18
+      MapPublicIpOnLaunch: true
+  Subnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet
+      SubnetId: !Ref Subnet1
+      RouteTableId: !Ref RouteTable
+  Subnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet2
       RouteTableId: !Ref RouteTable
   MainSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -49,31 +61,117 @@ Resources:
       GroupDescription: Security group for the API instances.
       VpcId: !Ref VPC
       SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-      SecurityGroupEgress:
-        - IpProtocol: tcp
+        - IpProtocol: "-1"
           FromPort: 0
           ToPort: 65535
           CidrIp: 0.0.0.0/0
-  MainInstance:
-    Type: AWS::EC2::Instance
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: 
+              !Sub 
+                  - "kubernetes.io/cluster/${EksId}"
+                  - EksId: !Ref EKS
+          Value: 'owned'  
+  EksSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
     Properties:
-      ImageId: ami-0ac05733838eabc06
-      InstanceType: t2.micro
-      SecurityGroupIds: 
-        - !GetAtt "MainSecurityGroup.GroupId"
-      SubnetId: !Ref Subnet
+      VpcId: !Ref VPC
+      GroupDescription: Default security group for EKS.
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 1025
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1025
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref InstanceRole
+  LaunchConfiguration:
+    DependsOn: EKS
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
       UserData:
-        Fn::Base64:
-            !Sub |
-                  #!/bin/bash
-                  apt-get update -y
-                  apt-get install docker.io -y
-                  docker login -username ${DockerUsername} -password ${DockerPassword}
-                  docker pull docker.io/{DockerUsername}/dotnet-api
-                  docker run -d -p 80:80 {DockerUsername}/dotnet-api
-
-
+        Fn::Base64: 
+          !Sub 
+            - |
+                #!/bin/bash
+                set -o xtrace
+                /etc/eks/bootstrap.sh ${EksId}
+                /opt/aws/bin/cfn-signal --exit-code $? \
+                        --stack  ${AWS::StackName} \
+                        --resource AutoScalingGroup  \
+                        --region ${AWS::Region}
+            - EksId: !Ref EKS
+      ImageId: ami-0c5d8b180f6256839
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp2
+            DeleteOnTermination: true
+      SecurityGroups:
+      - Ref: MainSecurityGroup
+      InstanceType: t2.micro
+  AutoScalingGroup:
+    DependsOn: EKS
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier:
+        - !Ref Subnet1
+        - !Ref Subnet2
+      LaunchConfigurationName:
+        Ref: LaunchConfiguration
+      DesiredCapacity: 3
+      MinSize: 2
+      MaxSize: 4
+      Tags:
+        - Key: 
+              !Sub 
+                  - "kubernetes.io/cluster/${EksId}"
+                  - EksId: !Ref EKS
+          Value: 'owned'
+          PropagateAtLaunch: 'true'
+  EKS:
+    Type: AWS::EKS::Cluster
+    Properties:
+      Version: '1.13'
+      RoleArn: arn:aws:iam::358599436160:role/eks-console-access
+      ResourcesVpcConfig:
+        SecurityGroupIds:
+          - !Ref EksSecurityGroup
+        SubnetIds:
+          - !Ref Subnet1
+          - !Ref Subnet2
