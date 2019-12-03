@@ -1,4 +1,4 @@
-# Containerizing an ASP.NET Core API
+# GitOps for an ASP.NET Core WebAPI
 
 This repository contains the code from the [ASP.NET Core with GitOps Series](https://www.red-gate.com/simple-talk/sysadmin/containerization/asp-net-core-with-gitops-dockerizing-an-api-on-aws-ec2/).
 
