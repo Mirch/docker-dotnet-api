@@ -135,7 +135,7 @@ Resources:
                         --resource AutoScalingGroup  \
                         --region ${AWS::Region}
             - EksId: !Ref EKS
-      ImageId: ami-0c5d8b180f6256839
+      ImageId: '/aws/service/eks/optimized-ami/1.14/amazon-linux-2/recommended/image_id'
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
