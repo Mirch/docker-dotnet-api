@@ -6,6 +6,10 @@ Parameters:
   DockerPassword:
     Description: The Docker Hub password.
     Type: String
+  AmiId:
+    Description: The AMI to use for the EKS nodes.
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/eks/optimized-ami/1.14/amazon-linux-2/recommended/image_id'
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -135,7 +139,7 @@ Resources:
                         --resource AutoScalingGroup  \
                         --region ${AWS::Region}
             - EksId: !Ref EKS
-      ImageId: '/aws/service/eks/optimized-ami/1.14/amazon-linux-2/recommended/image_id'
+      ImageId: !Ref AmiId
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
