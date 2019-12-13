@@ -19,3 +19,7 @@ You can use the **master** branch to follow this tutorial, even though it contai
 2. [Deploying Infrastructure as Code](https://www.red-gate.com/simple-talk/sysadmin/devops/asp-net-core-with-gitops-deploying-infrastructure-as-code/)
 
 You can use the [**infrastructure_as_code**](https://github.com/Mirch/docker-dotnet-api/tree/infrastructure_as_code) and [**infrastructure_as_code_2**](https://github.com/Mirch/docker-dotnet-api/tree/infrastructure_as_code_2) branches to follow this (for single instance and multiple instances deployments, respectively). The resources created in this tutorial can be found in the [infrastructure](https://github.com/Mirch/docker-dotnet-api/tree/master/infrastructure) folder.
+
+3. [Orchestrating Your Containers with Kubernetes](https://www.red-gate.com/simple-talk/sysadmin/devops/asp-net-core-with-gitops-orchestrating-your-containers-with-kubernetes/)
+
+You can use the [**eks_cluster**](https://github.com/Mirch/docker-dotnet-api/tree/eks_cluster) branch to follow this part. The resources created in this tutorial can be found in the [infrastructure](https://github.com/Mirch/docker-dotnet-api/tree/master/infrastructure) and [aws](https://github.com/Mirch/docker-dotnet-api/tree/master/aws) folders.
