@@ -34,6 +34,6 @@ stages:
         awsCredentials: 'AWS'
         regionName: 'eu-central-1'
         stackName: 'docker-dotnet-api'
-        templateFile: templates/iam_role.json
+        templateFile: infrastructure/infrastructure.yaml
         capabilityIAM: true
         capabilityNamedIAM: true
