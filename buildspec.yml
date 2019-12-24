@@ -1,0 +1,14 @@
+version: 0.2
+phases:
+pre_build:
+commands:
+- echo Restore started on `date`
+- dotnet restore DockerDotnetApi/DockerDotnetApi.csproj
+build:
+commands:
+- echo Build started on `date`
+- dotnet publish -c release -o ./build_output DockerDotnetApi/DockerDotnetApi.csproj
+artifacts:
+files:
+- /build_output/**/*
+- scripts/**/*
