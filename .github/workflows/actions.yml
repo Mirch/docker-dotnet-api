@@ -1,0 +1,20 @@
+name: CI/CD
+
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run:  docker build -t ${{ secrets.DOCKER_USERNAME }}/dotnet-api .
+    
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Push the Docker image
+      run: docker push docker.io/${{ secrets.DOCKER_USERNAME }}/dotnet-api:latest
