@@ -17,4 +17,7 @@ jobs:
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
     
     - name: Push the Docker image
-      run: docker push docker.io/${{ secrets.DOCKER_USERNAME }}/dotnet-api:latest
+      run: |
+        docker tag ${{ secrets.DOCKER_USERNAME }}/dotnet-api ${{ secrets.DOCKER_USERNAME }}/dotnet-api:$(git rev-parse --short HEAD)"
+        docker push docker.io/${{ secrets.DOCKER_USERNAME }}/dotnet-api:latest
+        
