@@ -18,6 +18,6 @@ jobs:
     
     - name: Push the Docker image
       run: |
-        docker tag ${{ secrets.DOCKER_USERNAME }}/dotnet-api ${{ secrets.DOCKER_USERNAME }}/dotnet-api:$(git rev-parse --short HEAD)
+        docker tag ${{ secrets.DOCKER_USERNAME }}/dotnet-api ${{ secrets.DOCKER_USERNAME }}/dotnet-api:$(date +%s)
         docker push docker.io/${{ secrets.DOCKER_USERNAME }}/dotnet-api:latest
         
