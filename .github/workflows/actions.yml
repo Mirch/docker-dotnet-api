@@ -28,8 +28,8 @@ jobs:
       
     - name: Deploy to AWS
       run: |
-        kubectl apply -f aws/aws-auth-cm.yaml
         aws eks --region eu-central-1 update-kubeconfig --name ${{ secrets.EKS_CLUSTER }}
+        kubectl apply -f aws/aws-auth-cm.yaml
         kubectl set image deployments/dotnet-api dotnet-api=${{ secrets.DOCKER_USERNAME }}/dotnet-api
         kubectl apply -f aws/cluster-deployment.yaml
         aws cloudformation update-stack --stack-name dotnet-docker --template-body file://infrastructure/infrastructure.yaml --parameters ParameterKey=DockerUsername,ParameterValue=${{ secrets.DOCKER_USERNAME }} ParameterKey=DockerPassword,ParameterValue=${{ secrets.DOCKER_PASSWORD }} --capabilities CAPABILITY_IAM
