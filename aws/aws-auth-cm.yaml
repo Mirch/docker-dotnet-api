@@ -10,3 +10,8 @@ data:
       groups:
         - system:bootstrappers
         - system:nodes
+   mapUsers: |
+      - userarn: arn:aws:iam::358599436160:user/github-user
+      username: admin
+      groups:
+          - system:masters
