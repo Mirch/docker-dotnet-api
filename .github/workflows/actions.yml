@@ -35,8 +35,7 @@ jobs:
       
     - name: Deploy to AWS
       run: |
-        aws --version
-        aws eks --region eu-central-1 update-kubeconfig --name ${{ secrets.EKS_CLUSTER }}
+        aws eks --region eu-central-1 update-kubeconfig --name ${{ secrets.EKS_CLUSTER }} --role-arn ${{ secrets.EKS_ROLE }}
         kubectl apply -f aws/aws-auth-cm.yaml
         kubectl set image deployments/dotnet-api dotnet-api=${{ secrets.DOCKER_USERNAME }}/dotnet-api
         kubectl apply -f aws/cluster-deployment.yaml
