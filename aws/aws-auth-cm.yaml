@@ -5,7 +5,7 @@ metadata:
   namespace: kube-system
 data:
   mapRoles: |
-    - rolearn: arn:aws:iam::358599436160:role/dotnet-docker-InstanceRole-ZDJ2CG8E6F5C
+    - rolearn: ${{ secrets.EKS_ROLE }}
       username: system:node:{{EC2PrivateDNSName}}
       groups:
         - system:bootstrappers
