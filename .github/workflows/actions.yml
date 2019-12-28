@@ -39,5 +39,5 @@ jobs:
         kubectl apply -f aws/aws-auth-cm.yaml
         kubectl set image deployments/dotnet-api dotnet-api=${{ secrets.DOCKER_USERNAME }}/dotnet-api
         kubectl apply -f aws/cluster-deployment.yaml
-        aws cloudformation deploy --stack-name dotnet-docker --template-file infrastructure/infrastructure.yaml --parameter-overrides DockerUsername=${{ secrets.DOCKER_USERNAME }} DockerPassword=${{ secrets.DOCKER_PASSWORD }} --capabilities CAPABILITY_IAM
+        aws/aws-cloudformation.sh deploy --stack-name dotnet-docker --template-file infrastructure/infrastructure.yaml --parameter-overrides DockerUsername=${{ secrets.DOCKER_USERNAME }} DockerPassword=${{ secrets.DOCKER_PASSWORD }} --capabilities CAPABILITY_IAM
         
