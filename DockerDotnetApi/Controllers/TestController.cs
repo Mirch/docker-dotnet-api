@@ -14,7 +14,7 @@ namespace DockerDotnetApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new { Message = "The API is working!" });
+            return Ok(new { Message = "The API is updated and working!" });
         }
     }
 }
