@@ -35,10 +35,9 @@ jobs:
       
     - name: Deploy to AWS
       run: |
+        chmod +x aws/aws-cloudformation.sh
+        aws/aws-cloudformation.sh deploy --stack-name dotnet-docker --template-file infrastructure/infrastructure.yaml --parameter-overrides DockerUsername=${{ secrets.DOCKER_USERNAME }} DockerPassword=${{ secrets.DOCKER_PASSWORD }} --capabilities CAPABILITY_IAM
         aws eks --region eu-central-1 update-kubeconfig --name ${{ secrets.EKS_CLUSTER }}
         kubectl apply -f aws/aws-auth-cm.yaml
         kubectl set image deployments/dotnet-api dotnet-api=${{ secrets.DOCKER_USERNAME }}/dotnet-api
         kubectl apply -f aws/cluster-deployment.yaml
-        chmod +x aws/aws-cloudformation.sh
-        aws/aws-cloudformation.sh deploy --stack-name dotnet-docker --template-file infrastructure/infrastructure.yaml --parameter-overrides DockerUsername=${{ secrets.DOCKER_USERNAME }} DockerPassword=${{ secrets.DOCKER_PASSWORD }} --capabilities CAPABILITY_IAM
-        
